@@ -14,10 +14,10 @@ public class Seed
         CreateJsonFile();
     }
 
-    public string JsonPath => Path.Combine(Directory.GetCurrentDirectory(), JsonFileName); 
-    public void CreateJsonFile()
+    private string JsonPath => Path.Combine(Directory.GetCurrentDirectory(), JsonFileName);
+
+    private void CreateJsonFile()
     {
-        Console.WriteLine(JsonPath);
         if (File.Exists(JsonPath)) return;
         var people = Enumerable
             .Range(1, 100)
@@ -25,10 +25,8 @@ public class Seed
                 new Person(index.ToString().PadLeft(4,'0'), Faker.Name.First(), Faker.Name.Last(), Faker.RandomNumber.Next(10, 200))
             ).ToList();
         var json = JsonConvert.SerializeObject(people);
-        using (StreamWriter writer = File.CreateText(JsonPath))
-        {
-            writer.WriteLine(json);
-        }
+        using var writer = File.CreateText(JsonPath);
+        writer.WriteLine(json);
     }
 
     public List<Person> GetPeople()
